@@ -75,11 +75,69 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => { };
+const login = async (req, res) => {
+  const { email, password } = req.body;
 
-const logout = async (req, res) => {
+  if (!email || !password) {
+    return res.status(400).json({
+      error: "All fields are required",
+      success: false,
+    });
+  }
 
+  try {
+    const user = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        error: "Please enter a valid email and password",
+        success: false,
+      });
+    }
+
+    const isMatched = await bcrypt.compare(password, user.password);
+
+    if (!isMatched) {
+      return res.status(401).json({
+        error: "Please enter a valid email and password",
+        success: false,
+      });
+    }
+
+    const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      sameSite: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    res.status(200).json({
+      message: "User loggedIn successfulley",
+      success: false,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user?.image,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({
+      error: error,
+      success: false,
+    });
+  }
 };
+
+const logout = async (req, res) => {};
 
 const check = async (req, res) => {};
 
