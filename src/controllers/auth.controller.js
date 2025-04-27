@@ -157,6 +157,19 @@ const logout = async (req, res) => {
   }
 };
 
-const check = async (req, res) => {};
+const check = async (req , res)=>{
+  try {
+      res.status(200).json({
+          success:true,
+          message:"User has been authenticated successfully",
+          user:req.user
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({
+          error:"Error checking user"
+      })
+  }
+}
 
 export { register, login, logout, check };
