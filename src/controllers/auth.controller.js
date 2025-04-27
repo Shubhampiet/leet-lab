@@ -137,7 +137,25 @@ const login = async (req, res) => {
   }
 };
 
-const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "You are logged out",
+    });
+  } catch (error) {
+    console.error("logout error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
 
 const check = async (req, res) => {};
 
