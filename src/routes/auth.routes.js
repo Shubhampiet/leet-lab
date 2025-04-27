@@ -5,12 +5,13 @@ import {
   logout,
   register,
 } from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const authRoutes = express();
 
 authRoutes.post("/register", register);
 authRoutes.post("/login", login);
-authRoutes.post("/logout", logout);
+authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.post("/check", check);
 
 export default authRoutes;
