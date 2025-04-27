@@ -1,17 +1,23 @@
-import express from "express"
-import dotenv from "dotenv"
+import express, { urlencoded } from "express";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes.js";
+import cookieparser from "cookie-parser";
 
+dotenv.config();
 
-dotenv.config()
+const app = express();
 
-const app = express()
+app.use(cookieparser());
+app.use(express.json());
 
-const port = process.env.PORT
+const port = process.env.PORT;
 
-app.get("/",(req,res)=>{
-    res.status(200).send("Welcome in Leet Lab")
-})
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome in Leet Lab");
+});
 
-app.listen(port,()=>{
-    console.log("App is listening on port", port)
-})
+app.use("/api/v1/auth", authRoutes);
+
+app.listen(port, () => {
+  console.log("App is listening on port", port);
+});
