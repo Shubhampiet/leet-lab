@@ -19,6 +19,12 @@ enum UserRole {
   ADMIN
 }
 
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String?
@@ -28,4 +34,24 @@ model User {
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Problem {
+id String @id @default(uuid())
+title String?
+description String?
+difficulty Difficulty
+tags String[]
+userId String
+examples json
+constraints String
+hints String?
+editorials String?
+
+testcases json
+codesnippets json
+referencesolutions json
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
