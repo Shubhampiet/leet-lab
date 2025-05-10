@@ -31,7 +31,7 @@ const register = async (req, res) => {
         email,
         password: hashedPassword,
         name,
-        role: UserRole.USER,
+        role: UserRole.ADMIN,
       },
     });
     console.log("newUser", newUser);
