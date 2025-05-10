@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const getJudge0LanguageId = (language) => {
+export const getJudge0LanguageId = (language) => {
   const languageMap = {
     PYTHON: 71,
     JAVA: 62,
@@ -17,7 +17,7 @@ const sleep = (ms) =>
 export const pollBatchResults = async (tokens) => {
   while (true) {
     const { data } = await axios.get(
-      `${process.env.JUDGE0_API_URL}/submidsions/batch`,
+      `${process.env.JUDGE0_API_URL}/submissions/batch`,
       {
         params: {
           tokens: tokens.join(","),
@@ -38,15 +38,19 @@ export const pollBatchResults = async (tokens) => {
 };
 
 export const submitBatch = async (submissions) => {
-  const { data } = await axios.post(
-    `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`,
-    {
-      submissions,
-    }
-  );
-  console.log("submission Results:", data);
-
-  return data;
+try {
+    const { data } = await axios.post(
+      `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`,
+      {
+        submissions,
+      }
+    );
+    console.log("submission Results:::::::::::::::::::", data);
+  
+    return data;
+} catch (error) {
+  console.log("submit batch error-----------", error)
+}
 };
 
 export function getLanguageName(languageId) {

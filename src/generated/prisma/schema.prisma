@@ -31,27 +31,32 @@ model User {
   email     String   @unique
   password  String
   image     String?
-  role      UserRole @default(USER)
+  role      UserRole @default(ADMIN)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  problems Problem[]
 }
 
 model Problem {
-id String @id @default(uuid())
-title String?
-description String?
-difficulty Difficulty
-tags String[]
-userId String
-examples Json
-constraints String
-hints String?
-editorials String?
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  difficulty  Difficulty
+  tags        String[]
+  userId      String
+  examples    Json
+  constraints String
+  hints       String?
+  editorial   String?
 
-testcases Json
-codesnippets Json
-referencesolutions Json
+  testcases          Json // 
+  codeSnippets       Json
+  referenceSolutions Json
 
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

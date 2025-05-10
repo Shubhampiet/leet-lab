@@ -47,7 +47,6 @@ export const authMiddleware = async (req, res, next) => {
 };
 
 export const checkAdmin = async (req, res, next) => {
-  console.log("req",req.body )
   try {
     const userId = req.body.id;
     const user = await db.user.findUnique({
