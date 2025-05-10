@@ -25,7 +25,7 @@ name String?
 email String @unique
 password String
 image String?
-role UserRole @default(USER)
+role UserRole @default(ADMIN)
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt  
 }
