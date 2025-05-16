@@ -39,6 +39,7 @@ export const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
+    console.log("req.user", req.user)
     next();
   } catch (error) {
     console.error("Error authenticating user:", error);
@@ -48,14 +49,14 @@ export const authMiddleware = async (req, res, next) => {
 
 export const checkAdmin = async (req, res, next) => {
   try {
-    const userId = req.body.id;
+    const userId = req.user.id;
     const user = await db.user.findUnique({
       where: { id: userId },
       select: { role: true },
     });
-
+console.log("user", user)
     if(!user || user.role !== "ADMIN"){
-      res.status(400).json({
+     return res.status(400).json({
         message:"access denied, admins only"
       })
     }
