@@ -92,7 +92,7 @@ model TestCaseResult{
   submissionId String
   testCase Int
   stdout String?
-  exprected String?
+  expected String?
   passed Boolean
   stderr String?
   compileOutput String?
