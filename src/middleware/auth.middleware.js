@@ -39,7 +39,6 @@ export const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
-    console.log("req.user", req.user)
     next();
   } catch (error) {
     console.error("Error authenticating user:", error);
@@ -54,17 +53,15 @@ export const checkAdmin = async (req, res, next) => {
       where: { id: userId },
       select: { role: true },
     });
-console.log("user", user)
-    if(!user || user.role !== "ADMIN"){
-     return res.status(400).json({
-        message:"access denied, admins only"
-      })
+    if (!user || user.role !== "ADMIN") {
+      return res.status(400).json({
+        message: "access denied, admins only",
+      });
     }
-    next()
+    next();
   } catch (error) {
-    console.log("error",error)
     res.status(500).json({
-      error:"Error in role checking"
-    })
+      error: "Error in role checking",
+    });
   }
 };

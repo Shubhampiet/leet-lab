@@ -21,7 +21,6 @@ export const createProblem = async (req, res) => {
   try {
     for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
       const languageId = getJudge0LanguageId(language);
-      console.log("languageId", languageId);
       if (!languageId) {
         return res.status(400).json({
           error: `language ${language} is not supported`,
@@ -30,10 +29,9 @@ export const createProblem = async (req, res) => {
       const submissions = testcases.map(({ input, output }) => ({
         source_code: solutionCode,
         language_id: languageId,
-        stdIn: input,
+        stdin: input,
         expected_output: output,
       }));
-      console.log("submissions", submissions);
       const submissionResults = await submitBatch(submissions);
 
       const tokens = submissionResults.map((res) => res.token);
@@ -42,14 +40,7 @@ export const createProblem = async (req, res) => {
 
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        console.log("result", result);
-        console.log(
-          `Testcase ${
-            i + 1
-          } and Language ${language}------ result ${JSON.stringify(
-            result.status.description
-          )}`
-        );
+    
         if (result.status.id !== 3) {
           return res.status(400).json({
             error: `Testcase ${i + 1} failed for language ${language}`,
@@ -79,7 +70,6 @@ export const createProblem = async (req, res) => {
       problem: newProblem,
     });
   } catch (error) {
-    console.log("error", error);
     return res.status(500).json({
       error: "Error while creating problem",
     });
@@ -102,7 +92,6 @@ export const getAllProblems = async (req, res) => {
       problems,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       error: "Error while fetching problems",
     });
@@ -127,7 +116,6 @@ export const getProblemById = async (req, res) => {
       problem,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       error: "Error while fetching problem by id",
     });
@@ -165,14 +153,14 @@ export const updateProblem = async (req, res) => {
 
       if (!languageId) {
         return res.status(400).json({
-          error: `LAnguage ${language} is ot supported`,
+          error: `Language ${language} is not supported`,
         });
       }
 
       const submissions = testcases.map(({ input, output }) => ({
         source_code: solutionCode,
         language_id: languageId,
-        stdIn: input,
+        stdin: input,
         expected_output: output,
       }));
 
@@ -184,7 +172,6 @@ export const updateProblem = async (req, res) => {
 
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        console.log("result-------------", result);
         if (result.status.id !== 3) {
           return res.status(400).json({
             error: `Testcase ${i + 1} failed for language ${language}`,
@@ -193,7 +180,7 @@ export const updateProblem = async (req, res) => {
       }
     }
 
-    const updatedProblem = await db.problem.updateProblem({
+    const updatedProblem = await db.problem.update({
       where: {
         id,
       },
@@ -217,7 +204,6 @@ export const updateProblem = async (req, res) => {
       problem: updatedProblem,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       error: "Error while Creating Problem",
     });
@@ -243,7 +229,6 @@ export const deleteProblem = async (req, res) => {
       message: "Problem deleted successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       error: "Error while deleting the problem",
     });
@@ -253,7 +238,7 @@ export const deleteProblem = async (req, res) => {
 export const getAllProblemsSolvedByUser = async (req, res) => {
   const { id } = req.user.id;
   try {
-    const problem = await db.problem.findMany({
+    const problems = await db.problem.findMany({
       where: {
         solvedBy: {
           some: {

@@ -4,7 +4,6 @@ import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
 
 const register = async (req, res) => {
-  console.log("req.body", req.body);
   const { name, email, password } = req.body;
 
   if (!email || !name || !password) {
@@ -16,7 +15,6 @@ const register = async (req, res) => {
 
   try {
     const existingUser = await db.user.findUnique({ where: { email } });
-    console.log("existingUser:", existingUser);
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -25,7 +23,6 @@ const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashedPassword", hashedPassword);
     const newUser = await db.user.create({
       data: {
         email,
@@ -34,10 +31,8 @@ const register = async (req, res) => {
         role: UserRole.ADMIN,
       },
     });
-    console.log("newUser", newUser);
 
     if (!newUser) {
-      console.log("failed");
       return res.status(400).json({
         success: false,
         message: "User registration failed",
@@ -47,7 +42,6 @@ const register = async (req, res) => {
     const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-    console.log("token", token);
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "strict",
@@ -129,7 +123,6 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("error", error);
     res.status(500).json({
       error: error,
       success: false,
@@ -157,19 +150,19 @@ const logout = async (req, res) => {
   }
 };
 
-const check = async (req , res)=>{
+const check = async (req, res) => {
   try {
-      res.status(200).json({
-          success:true,
-          message:"User has been authenticated successfully",
-          user:req.user
-      });
+    res.status(200).json({
+      success: true,
+      message: "User has been authenticated successfully",
+      user: req.user,
+    });
   } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({
-          error:"Error checking user"
-      })
+    console.error("Error:", error);
+    res.status(500).json({
+      error: "Error checking user",
+    });
   }
-}
+};
 
 export { register, login, logout, check };

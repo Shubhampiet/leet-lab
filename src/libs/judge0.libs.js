@@ -23,6 +23,13 @@ export const pollBatchResults = async (tokens) => {
           tokens: tokens.join(","),
           base64_encoded: false,
         },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${process.env.JUDGE0_API_KEY}`,
+        },
       }
     );
 
@@ -38,20 +45,22 @@ export const pollBatchResults = async (tokens) => {
 };
 
 export const submitBatch = async (submissions) => {
-try {
-  console.log("`${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`", `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`)
+  try {
     const { data } = await axios.post(
       `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`,
       {
         submissions,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${process.env.JUDGE0_API_KEY}`,
+        },
       }
     );
-    console.log("submission Results:::::::::::::::::::", data);
-  
     return data;
-} catch (error) {
-  console.log("submit batch error-----------", error)
-}
+  } catch (error) {}
 };
 
 export function getLanguageName(languageId) {
