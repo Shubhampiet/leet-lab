@@ -6,7 +6,8 @@ import {
   getAllListDetails,
   getPlaylistDetails,
   removeProblemFromPlaylist,
-} from "../controllers/playlist.controller";
+} from "../controllers/playlist.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const playlistRoutes = express.Router();
 
