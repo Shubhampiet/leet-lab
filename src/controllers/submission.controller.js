@@ -16,7 +16,6 @@ export const getAllSubmissions = async (req, res) => {
       submissions,
     });
   } catch (error) {
-    console.log("getAllSubmissions error", error);
     res.status(500).json({ error: "Failed to fetch submissions" });
   }
 };
@@ -39,7 +38,6 @@ export const getSubmissionsForProblem = async (req, res) => {
       submissions,
     });
   } catch (error) {
-    console.log("getSubmissionForProblem error", error);
     res.status(500).json({ error: "Failed to fetch submission" });
   }
 };
@@ -59,7 +57,6 @@ export const getSubmissionsCountForProblem = async (req, res) => {
       count: submissionsCount,
     });
   } catch (error) {
-    console.log("getSubmissionsCountForProblem error", error);
     res.status(500).json({ error: "Failed to fetch submissions count" });
   }
 };
