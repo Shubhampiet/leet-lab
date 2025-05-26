@@ -4,7 +4,6 @@ export const createPlaylist = async (req, res) => {
   try {
     const { name, description } = req.body;
     const userId = req.user.id;
-    console.log("userId>>>>>>", userId)
 
     if (!name) {
       return (
@@ -30,12 +29,38 @@ export const createPlaylist = async (req, res) => {
       playlist,
     });
   } catch (error) {
-    console.log("createPlaylist error", error);
     res.status(500).json({ error: "Failed to create playlist" });
   }
 };
 
-export const getAllListDetails = async (req, res) => {};
+export const getAllListDetails = async (req, res) => {
+    try {
+        const userId=req.user.id
+
+        const playlists = await db.playlist.findMany({
+            where:{
+                userId
+            },
+            include:{
+                problems:{
+                    include:{
+                        problem:true,
+                    }
+                }
+            }
+        })
+        res.status(200).json({
+            success:true,
+            message: "Playlists fetched successfully",
+            playlists
+        })
+    } catch (error) {
+        res.status(500).json({
+            error:"Failed to fetch playlist"
+        })
+    }
+};
+
 export const getPlaylistDetails = async (req, res) => {};
 export const addProblemToPlaylist = async (req, res) => {};
 export const deletePlaylist = async (req, res) => {};
