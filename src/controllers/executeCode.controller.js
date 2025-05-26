@@ -64,8 +64,6 @@ export const executeCode = async (req, res) => {
       };
     });
 
-    console.log("detailedResults>>>>>>", detailedResults);
-
     // store submission summry
     const submission = await db.submission.create({
         data: {
@@ -91,9 +89,7 @@ export const executeCode = async (req, res) => {
         },
       });
 
-console.log("submission---------",submission,"allPassed==============",allPassed)
     // If all passed = true
-
     if (allPassed) {
       await db.problemSolved.upsert({
         where: {
@@ -124,8 +120,6 @@ console.log("submission---------",submission,"allPassed==============",allPassed
       memory: result.memory,
       time: result.time,
     }));
-console.log("testCaseResults>>>>>>>>>",testCaseResults);
-console.log(JSON.stringify(testCaseResults, null, 2));
 
     await db.testCaseResult.createMany({
       data: testCaseResults,
@@ -139,14 +133,12 @@ console.log(JSON.stringify(testCaseResults, null, 2));
         testCases: true,
       },
     });
-console.log("submissionWithTestCase::::::::::",submissionWithTestCase);
     res.status(200).json({
       success: true,
       message: "Code executed successfully",
       submission: submissionWithTestCase,
     });
   } catch (error) {
-    console.log("error", error)
     res.status(400).json({
       message: "Error in code exucution",
       error,
