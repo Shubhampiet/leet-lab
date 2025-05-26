@@ -113,6 +113,37 @@ export const getPlaylistDetails = async (req, res) => {
       });
   }
 };
-export const addProblemToPlaylist = async (req, res) => {};
+
+export const addProblemToPlaylist = async (req, res) => {
+  try {
+    const { playlistId } = req.params;
+    const { problemIds } = req.body;
+
+    if (!playlistId) {
+      return res.status(400).json({ error: "PlaylistId is missing" });
+    }
+
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      return res.status(400).json({ error: "Invalid or missing problemIds " });
+    }
+
+    //create record for each problem in playlist
+    const problemsInPlaylist = await db.ProblemInPlaylist.createMany({
+      data: problemIds.map((problemId) => ({
+        playlistId,
+        problemId,
+      })),
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Problems added to playlist successfully",
+      problemsInPlaylist,
+    });
+  } catch (error) {
+    console.log("err>>>>>>>>>",error)
+    return res.status(500).json({ error: "Failed to add problem in playlist" });
+  }
+};
 export const deletePlaylist = async (req, res) => {};
 export const removeProblemFromPlaylist = async (req, res) => {};
