@@ -1,11 +1,10 @@
 import express from "express";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { getAllProblems } from "../controllers/problem.controller";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 import {
   getAllSubmissions,
   getAllTheSubmissionsForProblem,
   getSubmissionForProblem,
-} from "../controllers/submission.controller";
+} from "../controllers/submission.controller.js";
 
 const submissionRoutes = express.Router();
 
