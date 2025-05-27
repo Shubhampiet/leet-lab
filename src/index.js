@@ -1,6 +1,5 @@
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
-import cookieparser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
