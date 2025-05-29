@@ -40,7 +40,7 @@ export const createProblem = async (req, res) => {
 
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
-    
+
         if (result.status.id !== 3) {
           return res.status(400).json({
             error: `Testcase ${i + 1} failed for language ${language}`,
@@ -70,6 +70,7 @@ export const createProblem = async (req, res) => {
       problem: newProblem,
     });
   } catch (error) {
+    console.log("error", error);
     return res.status(500).json({
       error: "Error while creating problem",
     });
@@ -78,7 +79,15 @@ export const createProblem = async (req, res) => {
 
 export const getAllProblems = async (req, res) => {
   try {
-    const problems = await db.problem.findMany();
+    const problems = await db.problem.findMany({
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
 
     if (!problems) {
       return res.status(404).json({
